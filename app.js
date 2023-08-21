@@ -3,9 +3,14 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
+app.set("view engine", "ejs");
+app.set("views", "views");
+
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const contactRoutes = require("./routes/contact");
+
+const productsController = require("./controllers/products");
 
 const path = require("path");
 
@@ -14,13 +19,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/admin", adminRoutes);
 app.use("/contact-us", contactRoutes);
-app.post("/success", (req, res, next) => {
-  res.sendFile(path.join(__dirname, "views", "success.html"));
-});
+app.post("/success", productsController.success);
 app.use(shopRoutes);
 
-app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, "views", "404.html"));
-});
+app.use(productsController.pageNotFound);
 
-app.listen(3000);
+app.listen(4000);
